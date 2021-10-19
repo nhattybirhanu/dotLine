@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.Toolbar
+                app:collapseIcon="@drawable/ic_back"
+
+                app:navigationIcon="@drawable/ic_dot_white"
+                android:id="@+id/toolbar"
+                app:titleTextColor="@color/white"
+                app:title="@string/app_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+        <androidx.viewpager.widget.ViewPager
+            app:layout_constraintTop_toBottomOf="@id/appbar"
+            android:id="@+id/viewpager"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toTopOf="@id/bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </androidx.viewpager.widget.ViewPager>
+    <me.ibrahimsn.lib.SmoothBottomBar
+        app:textColor="@color/white"
+        app:iconSize="30dp"
+            android:id="@+id/bottom_bar"
+        app:iconTintActive="@color/white"
+        app:iconTint="@color/colorPrimaryDark"
+        app:backgroundColor="@color/colorAccent"
+        app:menu="@menu/bottom_menu"
+        android:background="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+    </me.ibrahimsn.lib.SmoothBottomBar>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

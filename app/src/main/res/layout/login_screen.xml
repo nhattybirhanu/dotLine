@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="8dp"
+    tools:context=".activity.account.LoginScreen"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_margin="8dp"
+        android:id="@+id/icon"
+        android:src="@drawable/ic_dot"
+        app:layout_constraintHeight_percent="0.3"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+    </ImageView>
+    <com.dotline.Custom.FontTextView
+
+        android:id="@+id/app_name"
+        android:textColor="@color/colorAccent"
+        android:textSize="40sp"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.dotline.Custom.FontTextView>
+    <com.dotline.Custom.FontTextView
+
+        android:gravity="center"
+        android:textStyle="italic"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:text="Ask And Answer"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/app_name"
+            android:id="@+id/moto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.dotline.Custom.FontTextView>
+    <LinearLayout
+        android:gravity="bottom"
+        app:layout_constrainedHeight="true"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/moto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.9"
+        android:layout_marginBottom="20dp"
+        android:layout_height="match_parent">
+            <TextView
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:text="Login with miu email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </TextView>
+        <com.google.android.material.textfield.TextInputLayout
+            app:boxBackgroundColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.ablomer.suffixedittext.SuffixEditText
+                android:id="@+id/email_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hintSuffix="example@miu.com"
+                app:hintSuffixColor="@color/colorOnPrimary"
+                app:suffix="@string/email_link"
+                app:suffixColor="@color/colorSecondaryDark"
+                android:paddingStart="8dp"
+                android:paddingLeft="8dp">
+
+            </com.ablomer.suffixedittext.SuffixEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            app:boxBackgroundColor="@color/white"
+            app:passwordToggleEnabled="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/password"
+                android:hint="password"
+                android:inputType="textPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </EditText>
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:id="@+id/forgot"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:layout_gravity="end"
+            android:text="@string/forgot_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
+            <Button
+                android:onClick="signIn"
+                android:id="@+id/login"
+                android:layout_margin="8dp"
+                android:textColor="@color/white"
+                android:text="@string/login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </Button>
+            <TextView
+                android:textSize="16sp"
+                android:text="or"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </TextView>
+        <Button
+            android:onClick="signUp"
+            android:id="@+id/signup"
+            android:backgroundTint="@color/colorSecondaryDark"
+            android:layout_margin="8dp"
+            android:textColor="@color/white"
+            android:text="@string/sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </Button>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

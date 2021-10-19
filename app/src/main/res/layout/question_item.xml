@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="8dp"
+    android:id="@+id/card"
+        app:contentPadding="4dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+
+            android:gravity="start"
+            android:fontFamily="sans-serif-black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/body"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintTop_toBottomOf="@id/profile_layout"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:text="The macro problem with microservices"
+            android:padding="8dp"
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </TextView>
+
+        <TextView
+
+            android:maxLines="6"
+            android:textColor="@color/black"
+            android:lineSpacingExtra="8dp"
+            android:fontFamily="sans-serif"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            android:text="In just 20 years, software engineering has shifted from architecting monoliths with a single database and centralized state to microservices where everything is distributed across multiple containers, servers, data centers, and even continents. Distributing things solves scaling concerns, but introduces a whole new world of problems, many of which were previously solved by monoliths."
+            android:padding="8dp"
+            android:id="@+id/body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </TextView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:padding="2dp"
+            android:id="@+id/images_list"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:padding="4dp"
+            android:id="@+id/tag_list"
+            app:layout_constraintTop_toBottomOf="@id/images_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/profile_layout"
+            app:layout_constraintTop_toTopOf="parent"
+            android:padding="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/profile_image"
+                android:layout_margin="4dp"
+                android:src="@drawable/ic_default_picture"
+                android:layout_width="30dp"
+                android:layout_height="30dp">
+
+            </ImageView>
+            <TextView
+                app:layout_constraintEnd_toStartOf="@id/answer_count"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/profile_image"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                android:text="Nhatty Birhanu"
+                android:layout_centerVertical="true"
+                android:padding="4dp"
+                android:layout_toLeftOf="@id/answer_count"
+                android:layout_toRightOf="@id/profile_image"
+                android:id="@+id/user_name"
+                app:layout_constrainedWidth="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </TextView>
+            <ImageButton
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/save"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/ic_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tint="@color/colorAccent">
+
+            </ImageButton>
+            <TextView
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/save"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/save"
+                android:clickable="true"
+                android:textStyle="bold"
+                android:id="@+id/answer_count"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:padding="4dp"
+                android:drawablePadding="4dp"
+                android:drawableTint="@color/colorSecondaryDark"
+                android:drawableEnd="@drawable/ic_replay"
+                android:layout_width="wrap_content"
+                android:text="20"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+
+            </TextView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

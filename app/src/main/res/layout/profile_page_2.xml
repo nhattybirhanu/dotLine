@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorAccent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+   <LinearLayout
+
+       android:gravity="center"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       android:orientation="vertical"
+       app:layout_constraintBottom_toBottomOf="parent"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+       <TextView
+           android:drawablePadding="8dp"
+           android:layout_margin="8dp"
+           android:autoLink="all"
+           android:drawableStart="@drawable/ic_mail"
+            android:id="@+id/email"
+           android:textColor="@color/white"
+           android:drawableTint="@color/white"
+           android:padding="8dp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content">
+
+       </TextView>
+       <TextView
+           android:drawablePadding="8dp"
+           android:textColorLink="@color/white"
+           android:text="https://www.linkedin.com/in/natnael-ajema"
+           android:layout_margin="8dp"
+           android:autoLink="all"
+           android:drawableStart="@drawable/ic_linkedin"
+           android:id="@+id/linkdin"
+           android:textColor="@color/white"
+           android:drawableTint="@color/white"
+           android:padding="8dp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content">
+
+       </TextView>
+       <TextView
+           android:drawablePadding="8dp"
+           android:layout_margin="8dp"
+           android:autoLink="all"
+           android:drawableStart="@drawable/ic_github"
+           android:id="@+id/github"
+           android:textColor="@color/white"
+           android:drawableTint="@color/white"
+           android:padding="8dp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content">
+
+       </TextView>
+   </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

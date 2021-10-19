@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "619243727888",
+    "project_id": "dotline-69939",
+    "storage_bucket": "dotline-69939.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:619243727888:android:570dcb11cdfe7de50c2e95",
+        "android_client_info": {
+          "package_name": "com.dotline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "619243727888-m4tn96dm5ld78mqbf0tnfjcm8jqi9jdg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB38TVXq4K-2SFPx_icyxX6n1oK8Y9Alh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "619243727888-m4tn96dm5ld78mqbf0tnfjcm8jqi9jdg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@android:color/transparent"
+    android:layout_height="wrap_content">
+   <RelativeLayout
+       android:background="@color/white"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+       <TextView
+           android:drawableTint="@color/colorAccent"
+           android:drawableEnd="@drawable/ic_filter"
+           android:id="@+id/title"
+           android:padding="8dp"
+           android:textSize="20sp"
+           android:gravity="center"
+           android:textColor="@color/colorAccent"
+           android:text="Filters"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+
+       </TextView>
+       <LinearLayout
+           android:orientation="horizontal"
+           android:id="@+id/filiter_tags"
+           android:layout_below="@id/title"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <Button
+               android:id="@+id/tag_filiter"
+               android:layout_margin="8dp"
+               android:drawableEnd="@drawable/ic_tag"
+               android:textColor="@color/white"
+               android:text="Picks tags"
+               android:textAllCaps="false"
+               android:layout_weight="1"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content">
+
+           </Button>
+           <Button
+               android:id="@+id/tag_date"
+               android:drawableTint="@color/white"
+               android:layout_margin="8dp"
+               android:drawableEnd="@drawable/ic_calander"
+               android:textColor="@color/white"
+               android:text="Date"
+               android:textAllCaps="false"
+               android:layout_weight="1"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content">
+
+           </Button>
+
+       </LinearLayout>
+       <RelativeLayout
+           android:layout_margin="8dp"
+           android:layout_below="@id/filiter_tags"
+           android:id="@+id/display_layout"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <TextView
+               android:visibility="gone"
+               android:layout_margin="8dp"
+               android:textSize="16sp"
+                android:layout_toStartOf="@id/date_close"
+               android:textColor="@color/colorAccent"
+               android:id="@+id/date_display"
+               android:padding="8dp"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+
+           </TextView>
+           <ImageButton
+               android:visibility="gone"
+               android:layout_centerVertical="true"
+               android:backgroundTint="@color/white"
+               android:layout_alignParentEnd="true"
+               android:tint="@color/black"
+                android:id="@+id/date_close"
+               android:src="@drawable/ic_close"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content">
+
+           </ImageButton>
+       </RelativeLayout>
+        <RelativeLayout
+            android:layout_below="@id/display_layout"
+            android:id="@+id/tag_list_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.recyclerview.widget.RecyclerView
+                android:padding="8dp"
+                android:layout_toStartOf="@id/list_close"
+                android:id="@+id/tags_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
+            <ImageButton
+                android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:backgroundTint="@color/white"
+                android:layout_alignParentEnd="true"
+                android:tint="@color/black"
+                android:id="@+id/list_close"
+                android:src="@drawable/ic_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </ImageButton>
+        </RelativeLayout>
+       <Button
+           android:layout_below="@id/tag_list_layout"
+           android:id="@+id/search_filter"
+           android:layout_margin="8dp"
+           android:drawableEnd="@drawable/ic_search"
+           android:textColor="@color/white"
+           android:text="Search with tags"
+           android:textAllCaps="false"
+           android:layout_weight="1"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+
+       </Button>
+
+   </RelativeLayout>
+    <ImageButton
+
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@drawable/rounded"
+        android:id="@+id/close_filter"
+        android:src="@drawable/ic_close"
+        android:textColor="@color/white"
+        android:text="Close"
+        android:textAllCaps="false"
+        android:layout_weight="1"
+        android:layout_width="50dp"
+        android:layout_height="50dp">
+
+    </ImageButton>
+</LinearLayout>
