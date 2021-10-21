@@ -1,15 +1,18 @@
 package com.dotline.adapter
 
 import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.dotline.R
 import com.dotline.activity.QuestionDetail
 import com.dotline.callbacks.BlogContentCallback
 import com.dotline.callbacks.UserProfileCallBack
+import com.dotline.fragments.ProfilePage
 import com.dotline.model.BlogContent
 import com.dotline.model.Profile
 import com.dotline.provider.QuestionProvider
@@ -17,6 +20,10 @@ import com.dotline.provider.UserProfileProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Source
 import kotlinx.android.synthetic.main.inbox_item.view.*
+import kotlinx.android.synthetic.main.inbox_item.view.display_name
+import kotlinx.android.synthetic.main.inbox_item.view.profile_image
+import kotlinx.android.synthetic.main.question_detail.*
+import kotlinx.android.synthetic.main.user_item.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -46,6 +53,15 @@ class InboxAdapter(var  activity: AppCompatActivity,var inboxes:ArrayList<BlogCo
                         body.text=
                             (if (!profile_id.equals(item.owner)) "You : " else "")+
                             item.body;
+                        Glide.with(profile_image).load(profile.profile_picture).placeholder(R.drawable.ic_default_picture).circleCrop().into(profile_image);
+                        profile_image.setOnClickListener {
+
+                            val profile_page= ProfilePage();
+                            var bundle= Bundle();
+                            bundle.putString("id",profile.id)
+                            profile_page.arguments=bundle;
+                            profile_page.show(activity.supportFragmentManager,"");
+                        }
 
                     }
 

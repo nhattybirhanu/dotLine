@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dotline.Custom.DividerItem
 import com.dotline.R
 import com.dotline.adapter.BlogContentAdapter
 import com.dotline.callbacks.BlogContentCallback
@@ -36,8 +37,9 @@ class AnswersListFragment :DialogFragment() {
             loadForUserId(uid!!);
         }  }
     fun loadForUserId(id:String){
-        adapter= BlogContentAdapter(arrayListOf(), activity as AppCompatActivity,true)
+        adapter= BlogContentAdapter(arrayListOf(), activity as AppCompatActivity,true,true)
         recyclerview.layoutManager= LinearLayoutManager(context);
+        recyclerview.addItemDecoration(DividerItem(requireContext(),resources.getDrawable(R.drawable.list_divider)))
         recyclerview.adapter=adapter;
         AnswerProvider.MyInstance().getAnswersForUser(id,object: BlogContentCallback(){
             override fun contentsResult(blogsContent: ArrayList<BlogContent>?) {

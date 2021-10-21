@@ -6,8 +6,6 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
-import android.text.TextUtils
-import android.text.method.LinkMovementMethod
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
 import android.util.Log
@@ -21,18 +19,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dotline.R
+import com.dotline.activity.QuestionCreator
 import com.dotline.activity.QuestionDetail
 import com.dotline.callbacks.BlogContentCallback
-import com.dotline.provider.UserProfileProvider
 import com.dotline.callbacks.Selected
 import com.dotline.callbacks.UserProfileCallBack
 import com.dotline.fragments.ProfilePage
+import com.dotline.help.DeleteManager
 import com.dotline.model.*
 import com.dotline.provider.QuestionProvider
+import com.dotline.provider.UserProfileProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Source
@@ -40,22 +39,14 @@ import io.github.armcha.autolink.AutoLinkTextView
 import io.github.armcha.autolink.MODE_CUSTOM
 import kotlinx.android.synthetic.main.answer_item.view.*
 import kotlinx.android.synthetic.main.common_blog_content.view.*
-import kotlinx.android.synthetic.main.profile_page_1.view.*
 import kotlinx.android.synthetic.main.question_item.view.*
 import kotlinx.android.synthetic.main.question_item.view.body
-import kotlinx.android.synthetic.main.question_item.view.profile_image
-import kotlinx.android.synthetic.main.question_item.view.tag_list
 import kotlinx.android.synthetic.main.question_item.view.title
-import kotlinx.android.synthetic.main.question_item.view.user_name
-import java.lang.StringBuilder
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
-class BlogContentAdapter(var blogs:ArrayList<BlogContent>,var activity: AppCompatActivity): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class BlogContentAdapter(var blogs:ArrayList<BlogContent>,var activity: AppCompatActivity,var closed: Boolean): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
    var myProfilePage:Profile?=null;
     var common:Boolean=false;
-    constructor( blogs:ArrayList<BlogContent>, activity: AppCompatActivity,commonView:Boolean) : this(blogs,activity) {
+    constructor( blogs:ArrayList<BlogContent>, activity: AppCompatActivity,commonView:Boolean,closed: Boolean) : this(blogs,activity,closed) {
         common=commonView;
     }
 
@@ -158,6 +149,7 @@ class BlogContentAdapter(var blogs:ArrayList<BlogContent>,var activity: AppCompa
                         }
 
                     }
+                    replay_input.visibility=if (closed) View.GONE else View.VISIBLE;
                     setReplay(replay_body,blog.replays)
                     manageButton(up,down,blog,user?.uid?:"")
 
@@ -185,6 +177,11 @@ class BlogContentAdapter(var blogs:ArrayList<BlogContent>,var activity: AppCompa
             3->{
                 var  commonHolder=holder as CommonHolder;
                 commonHolder.itemView.apply {
+                    if (!user!!.uid.equals(blog.owner))
+                    option.visibility=View.GONE;
+                    option.setOnClickListener {
+                        showOption(it,blog,position)
+                    }
                     if (blog.question){
                         setOnClickListener { openQuestion(blog) }
                         title.text=blog.title;
@@ -252,9 +249,19 @@ class BlogContentAdapter(var blogs:ArrayList<BlogContent>,var activity: AppCompa
 
 
     fun addAll(blogs: List<BlogContent>) {
-        val pos=this.blogs.size;
-        this.blogs.addAll(blogs);
-        notifyItemRangeInserted(pos,blogs.size)
+        for (blog in blogs){
+            val pos=this.blogs.indexOf(blog);
+            if (pos==-1){
+                this.blogs.add(0,blog);
+                notifyItemInserted(blogs.size)
+
+            } else {
+                this.blogs.set(pos,blog);
+                notifyItemChanged(pos)
+            }
+
+            }
+
     }
 
   private  fun setImages(recyclerView: RecyclerView,blog:BlogContent){
@@ -304,11 +311,23 @@ class BlogContentAdapter(var blogs:ArrayList<BlogContent>,var activity: AppCompa
 //        val custom = MODE_CUSTOM("\\sAndroid\\b", "\\sGoogle\\b")
         var usernames= arrayListOf<String>();
         var userIDMap=HashMap<String,String>();
+        var replyUserMap=HashMap<String,String>();
         var replayBody=StringBuilder();
         var count=0;
         var total=replays.size;
         textView.onAutoLinkClick {
-            showMessage(textView, "Hello ${ userIDMap.get(it.originalText.trim()) }")
+            var id=userIDMap.get(it.transformedText.trim());
+        if(myProfilePage!!.id.equals(id))
+        {
+            val profile_page= ProfilePage();
+            var bundle= Bundle();
+            bundle.putString("id",id)
+            profile_page.arguments=bundle;
+            profile_page.show(activity.supportFragmentManager,"");
+        }
+            else {
+              Toast.makeText(activity,id,Toast.LENGTH_SHORT).show();
+            }
         }
         for (reply in replays){
             var body=reply.message;
@@ -373,10 +392,48 @@ class BlogContentAdapter(var blogs:ArrayList<BlogContent>,var activity: AppCompa
         }
         imB.setImageResource( if (seleted) R.drawable.ic_save else R.drawable.ic_saved)
     }
+    fun showOption(view: View,blogContent: BlogContent,pos:Int){
+        var popupMenu=PopupMenu(activity,view);
+        popupMenu.inflate(R.menu.content_options);
+        var close=popupMenu.menu.findItem(R.id.close);
+        if (blogContent.question){
+            close.setVisible(true);
+            close.setTitle(if (blogContent.closed) "Open the question " else "Close the question")
+
+        }
+        popupMenu.show();
+        popupMenu.setOnMenuItemClickListener {
+                when(it.itemId){
+                    R.id.edit->{
+                        var answer=Intent(activity, QuestionCreator::class.java)
+                        answer.putExtra("question",blogContent.question)
+                        answer.putExtra("question_id", blogContent.id);
+                        answer.putExtra("question_owner", blogContent.owner);
+                        answer.putExtra("blog",blogContent)
+                        answer.putExtra("edit",true);
+                        activity.startActivity(answer)
+
+                    }
+                    R.id.delete->{
+                        DeleteManager.deleteBLog(blogContent)
+                        blogs.removeAt(pos);
+                        notifyItemRemoved(pos)
+                    }
+                    R.id.close->{
+                        FirebaseFirestore.getInstance().collection("Questions")
+                            .document(blogContent.id).update("closed",!blogContent.closed)
+                    }
+
+                }
+            popupMenu.dismiss();
+
+            true
+        }
+    }
 
 
 
-    fun clear() {
+fun clear() {
         blogs.clear(); notifyDataSetChanged()
     }
 }

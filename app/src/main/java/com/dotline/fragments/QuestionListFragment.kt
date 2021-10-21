@@ -10,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dotline.Custom.DividerItem
 import com.dotline.R
 import com.dotline.adapter.BlogContentAdapter
 import com.dotline.callbacks.BlogContentCallback
@@ -18,6 +19,7 @@ import com.dotline.provider.QuestionProvider
 import com.dotline.provider.UserProfileProvider
 import com.dotline.viewModels.UserProfileModel
 import kotlinx.android.synthetic.main.content_list.*
+import kotlinx.android.synthetic.main.search_layout.*
 
 class QuestionListFragment :DialogFragment() {
     var uid:String?=null;
@@ -54,9 +56,10 @@ class QuestionListFragment :DialogFragment() {
     }
 
     fun loadSaved(ids:ArrayList<String>){
-        adapter= BlogContentAdapter(arrayListOf(), activity as AppCompatActivity,true)
+        adapter= BlogContentAdapter(arrayListOf(), activity as AppCompatActivity,true,true)
         recyclerview.layoutManager=LinearLayoutManager(context);
         recyclerview.adapter=adapter;
+        recyclerview.addItemDecoration(DividerItem(requireContext(),resources.getDrawable(R.drawable.list_divider)))
         QuestionProvider.MyInstance().getSavedQuestions(ids,object:BlogContentCallback(){
             override fun contentsResult(blogsContent: ArrayList<BlogContent>?) {
                 blogsContent?.let { adapter.addAll(it) }
@@ -66,9 +69,10 @@ class QuestionListFragment :DialogFragment() {
     }
 
     fun loadForUserId(id:String){
-        adapter= BlogContentAdapter(arrayListOf(), activity as AppCompatActivity,true)
+        adapter= BlogContentAdapter(arrayListOf(), activity as AppCompatActivity,true,true)
         recyclerview.layoutManager=LinearLayoutManager(context);
         recyclerview.adapter=adapter;
+        recyclerview.addItemDecoration(DividerItem(requireContext(),resources.getDrawable(R.drawable.list_divider)))
         QuestionProvider.MyInstance().getQuestionForUser(id,object:BlogContentCallback(){
             override fun contentsResult(blogsContent: ArrayList<BlogContent>?) {
                 blogsContent?.let { adapter.addAll(it) }

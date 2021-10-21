@@ -13,6 +13,10 @@ class Profile {
     var following= arrayListOf<String>()
     var followers:Long=0
     var profile_picture:String?=null;
+    var bio: String="";
+    var github: String="";
+    var linkedin: String="";
+    var mentions= arrayListOf<String>()
     companion object{
         fun instance( map:Map<String,Any>,uid:String):Profile{
          var profile=Profile()
@@ -27,8 +31,18 @@ class Profile {
             if (map.containsKey("email"))
             profile.email= map.get("email") as String
 
+            if (map.containsKey("bio"))
+                profile.bio= map.get("bio") as String
+            if (map.containsKey("github"))
+                profile.github= map.get("github") as String
+            if (map.containsKey("linkedin"))
+                profile.linkedin= map.get("linkedin") as String
+
             if (map.containsKey("following"))
                 profile.following= map.get("following") as ArrayList<String>
+
+            if (map.containsKey("mentions"))
+                profile.mentions= map.get("mentions") as ArrayList<String>
 
             if (map.containsKey("followers"))
                 profile.followers= map.get("followers") as Long
@@ -44,5 +58,9 @@ class Profile {
             return  profile
         }
 
+    }
+
+    override fun toString(): String {
+        return displayName;
     }
 }

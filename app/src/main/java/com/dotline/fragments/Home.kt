@@ -18,6 +18,7 @@ import com.dotline.adapter.BlogContentAdapter
 import com.dotline.viewModels.HomeViewModel
 import com.dotline.viewModels.UserProfileModel
 import kotlinx.android.synthetic.main.home.*
+import java.util.*
 
 class Home:DialogFragment() {
    lateinit var homeViewModel:HomeViewModel;
@@ -33,23 +34,28 @@ class Home:DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         custom_fab.fabIcon=resources.getDrawable(R.drawable.ic_add);
         custom_fab.setOnClickListener { startActivity(Intent(context,QuestionCreator::class.java)) }
-        adapter=BlogContentAdapter(arrayListOf(), activity as AppCompatActivity)
+        adapter=BlogContentAdapter(arrayListOf(), activity as AppCompatActivity,false,true)
      //   recyclerview.setHasFixedSize(true);
         var userProfileModel=ViewModelProvider(requireActivity()).get(UserProfileModel::class.java);
         userProfileModel.profileLiveData().observe(this, Observer { profile->
             if (profile!=null){
                 adapter.myProfilePage=profile;
+                setListener()
             } else requireActivity().finish()
 
         })
 
+
+    }
+    fun setListener(){
         recyclerview.layoutManager=LinearLayoutManager(context);
-      recyclerview.addItemDecoration(DividerItem(requireContext(),resources.getDrawable(R.drawable.list_divider)))
+        recyclerview.addItemDecoration(DividerItem(requireContext(),resources.getDrawable(R.drawable.list_divider)))
         recyclerview.adapter=adapter;
         homeViewModel=ViewModelProvider(requireActivity()).get(HomeViewModel::class.java);
-      homeViewModel.blogs().observe(this, Observer { blogs->
-                adapter.addAll(blogs!!);
-                Log.i("blog",blogs.toString())
+        homeViewModel.blogs().observe(this, Observer { blogs->
+             Collections.reverse(blogs);
+            adapter.addAll(blogs!!);
+            Log.i("blog",blogs.toString())
 
         });
     }

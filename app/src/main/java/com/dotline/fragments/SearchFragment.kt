@@ -1,6 +1,7 @@
 package com.dotline.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dotline.Custom.DividerItem
 import com.dotline.R
 import com.dotline.adapter.BlogContentAdapter
 import com.dotline.adapter.ProfileAdapter
@@ -19,6 +21,7 @@ import com.dotline.model.Profile
 import com.dotline.provider.SearchProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
+import kotlinx.android.synthetic.main.content_list.*
 import kotlinx.android.synthetic.main.search_layout.*
 
 class SearchFragment:DialogFragment() {
@@ -53,8 +56,9 @@ class SearchFragment:DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        blogadapter= BlogContentAdapter(arrayListOf(), requireActivity() as AppCompatActivity,true)
+        blogadapter= BlogContentAdapter(arrayListOf(), requireActivity() as AppCompatActivity,true,false)
         profileadapter= ProfileAdapter(arrayListOf(), requireActivity() as AppCompatActivity,false,standalone);
+        search_list.addItemDecoration(DividerItem(requireContext(),resources.getDrawable(R.drawable.list_divider)))
         search_list.layoutManager=LinearLayoutManager(context);
         more.setOnClickListener {
             if (blog_search){
@@ -67,8 +71,9 @@ class SearchFragment:DialogFragment() {
         }
         if(standalone) {
             app_bar.visibility = View.VISIBLE;
+            var searchMenu=toolbar.menu.findItem(R.id.search); searchMenu.setVisible(true)
             var searchView: SearchView =
-                toolbar.menu.findItem(R.id.search).actionView as SearchView;
+               searchMenu .actionView as SearchView;
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     return false;
@@ -83,6 +88,7 @@ class SearchFragment:DialogFragment() {
             toolbar.menu.findItem(R.id.done)
                 .setOnMenuItemClickListener(object : MenuItem.OnMenuItemClickListener {
                     override fun onMenuItemClick(item: MenuItem?): Boolean {
+                        Log.i("UserSelector",profileadapter.getSelected().toString()+"${callback==null}")
                         if (callback != null) callback!!.profiles(profileadapter.getSelected())
                         dismiss()
                         return true;

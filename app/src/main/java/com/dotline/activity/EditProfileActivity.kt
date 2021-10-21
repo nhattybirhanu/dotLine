@@ -43,6 +43,9 @@ class EditProfileActivity:AppCompatActivity() {
     var updated_DiplayName:String?=null;
     var updated_UserName:String?=null;
 
+    var updated_github:String?=null;
+    var updated_linkdein:String?=null;
+    var updated_bio:String?=null;
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.edit_your_profile)
         super.onCreate(savedInstanceState)
@@ -52,7 +55,13 @@ class EditProfileActivity:AppCompatActivity() {
                 profile=it
                 display_name.setText(profile!!.displayName)
                 username.setText(profile!!.userName)
+
+                bio.setText(profile!!.bio)
+                github.setText(profile!!.github)
+                linkden.setText(profile!!.linkedin)
+
                 Glide.with(image_view).load(profile!!.profile_picture).placeholder(R.drawable.ic_default_picture).circleCrop().into(image_view);
+                update.setEnabled(true);
             };
 
         })
@@ -95,6 +104,18 @@ class EditProfileActivity:AppCompatActivity() {
 
             if (display_name.text.isNotEmpty()&&!profile!!.displayName.equals(display_name.text.toString())){
                 updated_DiplayName=display_name.text.toString();
+                upate_fonund=true;
+            }
+            if (bio.text.isNotEmpty()&&!profile!!.bio.equals(bio.text.toString())){
+                updated_bio=bio.text.toString();
+                upate_fonund=true;
+            }
+            if (linkden.text.isNotEmpty()&&!profile!!.linkedin.equals(linkden.text.toString())){
+                updated_linkdein=linkden.text.toString();
+                upate_fonund=true;
+            }
+            if (github.text.isNotEmpty()&&!profile!!.github.equals(github.text.toString())){
+                updated_github=github.text.toString();
                 upate_fonund=true;
             }
 
@@ -182,6 +203,15 @@ class EditProfileActivity:AppCompatActivity() {
         if (updated_DiplayName!=null) data.put("displayname",updated_DiplayName!!)
         if (updated_UserName!=null)
             data.put("username",updated_UserName!!)
+
+        if (updated_bio!=null)
+            data.put("bio",updated_bio!!)
+        if (updated_linkdein!=null)
+            data.put("linkedin",updated_linkdein!!)
+        if (updated_github!=null)
+            data.put("github",updated_github!!)
+
+
         if (profileUrl!=null)            data.put("profile_picture",profileUrl!!)
         if (profile!=null){
             var docu=FirebaseFirestore.getInstance().collection("Users").document(profile!!.id);

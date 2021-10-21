@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
@@ -17,16 +18,21 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
+import androidx.work.*
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.dotline.Custom.CustomSearchView
-import com.dotline.adapter.TagAdapter
+import com.dotline.Service.NotificationService
 import com.dotline.adapter.TextSelectorAdapter
 import com.dotline.callbacks.Selected
 import com.dotline.fragments.*
 import com.dotline.model.Selector
 import com.dotline.model.Tag
+import com.dotline.viewModels.UserProfileModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -34,6 +40,7 @@ import com.natnaelAjema.mycv.Adapter.FragmentPageAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.filter.view.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
@@ -60,6 +67,24 @@ class MainActivity : AppCompatActivity() {
         viewpager.offscreenPageLimit=2;
         user= FirebaseAuth.getInstance().currentUser;
         navigation()
+        schedule()
+        var userViewmoMdoel=ViewModelProvider(this).get(UserProfileModel::class.java);
+        userViewmoMdoel.profileLiveData().observe(this, androidx.lifecycle.Observer {
+
+            if (it!=null){
+                Glide.with(this).load(it.profile_picture).placeholder(R.drawable.ic_default_picture).circleCrop().into(object : CustomTarget<Drawable?>() {
+                    override fun onLoadCleared(placeholder: Drawable?) {}
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        transition: Transition<in Drawable?>?
+
+                    ) {
+                        menu!!.findItem(R.id.profile).setIcon(resource)
+
+                    }
+                })
+            }
+        })
 
     }
 
@@ -83,6 +108,9 @@ class MainActivity : AppCompatActivity() {
                     menu!!.findItem(R.id.search).setVisible(showSearch)
                     menu!!.findItem(R.id.filter).setVisible(showSearch)
                     menu!!.findItem(R.id.profile).setVisible(!showSearch)
+                    if (snackbar!=null&&snackbar!!.isShown&&!showSearch) snackbar!!.dismiss();
+                if (showSearch)
+                menu!!.findItem(R.id.search).expandActionView();else menu!!.findItem(R.id.search).collapseActionView()
                 }
 
             }
@@ -170,6 +198,9 @@ class MainActivity : AppCompatActivity() {
         layout.search_filter.setOnClickListener {
             searchFragment.searchBlog(Selector.toStirngArray(adapter.selector),date,true);
             snackbar!!.dismiss()
+
+
+        }
         layout.list_close.setOnClickListener {
             adapter.clear();
             layout.tag_list_layout.visibility=View.GONE
@@ -214,23 +245,35 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 })
-            datePickerDialog.show();
+                datePickerDialog.show();
             }
 
         }
-    layout.date_close.setOnClickListener {
-        layout.date_close.visibility=View.GONE;
-        date=-1;
-        layout.date_display.visibility=View.VISIBLE;
-        layout.date_display.text="";
-    }
+        layout.date_close.setOnClickListener {
+            layout.date_close.visibility=View.GONE;
+            date=-1;
+            layout.date_display.visibility=View.VISIBLE;
+            layout.date_display.text="";
+        }
         sView.setPadding(0,0,0,0)
         snackbar!!.show()
 
-    }
-
 
 }
+    fun schedule() {
+        val constraints: Constraints = Constraints.Builder()
+     .setRequiredNetworkType(NetworkType.CONNECTED)
+
+            .build()
+        val request =
+            PeriodicWorkRequest.Builder(NotificationService::class.java, 15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .addTag("Notification")
+                .build()
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork("Notification", ExistingPeriodicWorkPolicy.REPLACE, request)
+    }
+
     fun permission(){
         if (SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
             try {

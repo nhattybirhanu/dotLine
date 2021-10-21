@@ -62,4 +62,12 @@ class TagAdapter(var tags:ArrayList<Tag>,var selector:Selected,var activity: App
             notifyItemRemoved(i);
         }
     }
+
+    fun remove(objects: Tag) {
+        var pos=tags.indexOf(objects);
+        if (pos!=-1){
+            tags.removeAt(pos);
+            notifyItemRemoved(pos)
+        }
+    }
 }

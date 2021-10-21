@@ -1,11 +1,14 @@
 package com.dotline.fragments
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import com.dotline.R
@@ -66,7 +69,9 @@ class ProfilePage:DialogFragment(),Toolbar.OnMenuItemClickListener {
             override fun profile(profile: Profile) {
                 var ownerProfile=UserProfileProvider.MyInstance().profiles.get(user!!.uid)
                var views= ArrayList<View>(arrayListOf(viewinflate(R.layout.profile_page_1),viewinflate(R.layout.profile_page_2)))
-                val  adapter=LayoutViewPageAdapter(views,profile)
+                val  adapter=LayoutViewPageAdapter(views,profile,
+                    requireActivity() as AppCompatActivity
+                )
                 profile_pager.adapter=adapter;
                 profile_pager.offscreenPageLimit=2
                 profile_tablayout.setupWithViewPager(profile_pager)
@@ -85,10 +90,10 @@ class ProfilePage:DialogFragment(),Toolbar.OnMenuItemClickListener {
                 var followUser=ownerProfile!!.following.contains(profile.id);
                 updateFollowBtn(followUser)
                 var followed=profile.following.contains(user!!.uid)
-                if (followed &&followUser)
-                    toolbar.subtitle="Connected"
-                else if (followed)
-                    toolbar.subtitle="Following you"
+//                if (followed &&followUser)
+//                    toolbar.subtitle="Connected"
+//                else if (followed)
+//                    toolbar.subtitle="Following you"
 
                 follow.setOnClickListener {
                     UserProfileProvider.MyInstance().manageFollowUser(user!!.uid,profile.id,!followUser)
@@ -117,6 +122,8 @@ class ProfilePage:DialogFragment(),Toolbar.OnMenuItemClickListener {
             var saved = QuestionListFragment();
             saved.arguments = getB(uid, true);
             adapter.add(saved, "Saved")
+           var tagsFragment=TagFragment();
+           adapter.add(tagsFragment,"Tags")
         }
         viewpager.adapter=adapter;
         tablayout.setupWithViewPager(viewpager)
@@ -134,9 +141,21 @@ class ProfilePage:DialogFragment(),Toolbar.OnMenuItemClickListener {
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.logout->{
-                FirebaseAuth.getInstance().signOut();
-                startActivity(Intent(context,Splash::class.java))
-                activity?.finish()
+               var alertDialog=AlertDialog.Builder(requireContext())
+                alertDialog.setTitle("Log out")
+                alertDialog.setMessage("Continue processing?")
+                alertDialog.setPositiveButton("Yes", DialogInterface.OnClickListener(){
+                        dialog, which ->
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(Intent(context,Splash::class.java))
+                    activity?.finish()
+                    dialog.dismiss()
+                })
+                alertDialog.setNegativeButton("Cancle", DialogInterface.OnClickListener(){
+                        dialog, which ->
+                    dialog.dismiss()
+                })
+                alertDialog.show()
             }
             R.id.edit->{
                 startActivity(Intent(context,EditProfileActivity::class.java))

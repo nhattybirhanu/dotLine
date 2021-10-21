@@ -8,10 +8,9 @@ import androidx.lifecycle.MutableLiveData
 import com.dotline.model.BlogContent
 import com.dotline.model.Profile
 import com.dotline.provider.QuestionProvider
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Query
+import com.dotline.provider.UserProfileProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.*
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
    lateinit var registration:ListenerRegistration;
@@ -21,15 +20,24 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
     fun load(){
         var collection=FirebaseFirestore.getInstance().collection("Questions")
-       registration= collection.orderBy("date",Query.Direction.DESCENDING).addSnapshotListener(EventListener { value, error ->
+    //   whereArrayContainsAny("tags",userProfile().tags)
+             //.whereArrayContainsAny("following",userProfile().following)
+           //.whereArrayContainsAny("mentions",userProfile().mentions).
+        var query:Query=  collection.orderBy("date",Query.Direction.DESCENDING);
+            registration=query. addSnapshotListener(EventListener { value, error ->
            if (error!=null){
                return@EventListener;
            }
                     var list= arrayListOf<BlogContent>();
-                for (doc in value!!){
-                    var blog= doc.data.let { BlogContent.blog(true,doc.id, it) }
-                    QuestionProvider.MyInstance().setQuestion(blog.id,blog);
-                      list.add(blog)
+                for (doChange in value!!.documentChanges){
+                    Log.i("blog",doChange.toString())
+                    if (doChange.type==DocumentChange.Type.ADDED) {
+                        var doc = doChange.document;
+                        var blog = doc.data.let { BlogContent.blog(true, doc.id, it) }
+                        QuestionProvider.MyInstance().setQuestion(blog.id, blog);
+                        list.add(blog)
+                    }
+
                 }
            blogs.postValue(list);
 
@@ -45,6 +53,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun blogs():LiveData<List<BlogContent>?>{
         return  blogs
+    }
+    fun userProfile():Profile{
+        val user=FirebaseAuth.getInstance().currentUser;
+        return UserProfileProvider.MyInstance().profiles.get(user!!.uid)!!;
     }
 
 }

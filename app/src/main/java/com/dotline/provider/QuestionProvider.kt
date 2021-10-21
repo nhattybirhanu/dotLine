@@ -37,10 +37,11 @@ class QuestionProvider() {
          var collection = FirebaseFirestore.getInstance().collection("Questions")
             collection.document(id).get(source).addOnSuccessListener {
                 snapshot->
-                var blog=BlogContent.blog(true,snapshot.id, snapshot.data!!);
-                callback.singleResult(blog)
-                allquestons.put(id,blog)
-
+                if(snapshot.data!=null) {
+                    var blog = BlogContent.blog(true, snapshot.id, snapshot.data!!);
+                    callback.singleResult(blog)
+                    allquestons.put(id, blog)
+                }
 
             }
 

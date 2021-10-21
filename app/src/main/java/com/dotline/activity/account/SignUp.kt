@@ -1,6 +1,7 @@
 package com.dotline.activity.account
 
 import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.PagerAdapter
@@ -71,8 +73,26 @@ class SignUp:AppCompatActivity() {
         viewpager.adapter=adapter;
         viewpager.offscreenPageLimit=6;
         auth= FirebaseAuth.getInstance();
-
+        toolbar.setNavigationOnClickListener {
+            close()
+        }
     }
+    fun close(){
+        var dialog= AlertDialog.Builder(this);
+        dialog.setTitle("Do you want cancle sign up ?")
+        dialog.setPositiveButton("Close", DialogInterface.OnClickListener(){
+                dialog, which ->
+            dialog.dismiss()
+            finish()
+        })
+        dialog.setNegativeButton("Cancle", DialogInterface.OnClickListener(){
+                dialog, which ->
+            dialog.dismiss()
+        })
+
+        dialog.show()
+    }
+
     fun createProgressDialog(){
     progressBar= ProgressDialog(this);
         progressBar.setCancelable(false)
@@ -92,7 +112,7 @@ class SignUp:AppCompatActivity() {
                     showMessage("Please enter your miu email",false)
                     return
                 }
-                if (email==null){
+                if (email==null&&canGonext!=null){
                     goNext=null
 
                     progressBar.setMessage("Checking email")
@@ -129,7 +149,7 @@ class SignUp:AppCompatActivity() {
                 }
             }
             3->{
-                if (canGonext!!){
+                if (canGonext!=null&&canGonext!!){
                     goNext=null;
                     if (TextUtils.isEmpty(user_name.text))
                     {
@@ -150,16 +170,20 @@ class SignUp:AppCompatActivity() {
                 if (canGonext!!&&email!=null&&confiremd_password!=null){
                     progressBar.setMessage("Creating account")
                     progressBar.show()
-                    createUserWithNameEmailAndPassword(email.plus("@miu.edu"),confiremd_password)
+                    createUserWithNameEmailAndPassword(email,confiremd_password)
 
                 } else
                 Log.i("auth","validation is not passed")
 
             }
         }
-
+        if (canGonext==null){
+            next.setEnabled(true)
+            previous.setEnabled(true)
+        }
         if(goNext!=null){
-            if(goNext)viewpager.next() else viewpager.previous()
+            if(goNext)
+                viewpager.next() else viewpager.previous()
             signup_Progress.setProgress(20*viewpager.currentItem+(if(goNext) 1 else -1))
             next.setEnabled(true)
             previous.setEnabled(true)
@@ -167,27 +191,35 @@ class SignUp:AppCompatActivity() {
             next.setEnabled(false)
             previous.setEnabled(false)
         }
+
+
          }
 
     fun emailIsTaken(ver_email:String) {
-        auth.fetchSignInMethodsForEmail(ver_email.plus("@miu.edu"))
+        var email=ver_email;
+        Log.i("Auth","Email $email")
+        if (!email.contains("@miu.edu")) email=email.plus("@miu.edu")
+        Log.i("Auth","Email validate $email")
+
+        auth.fetchSignInMethodsForEmail(email)
             .addOnCompleteListener(this){task->
                 if (task.isSuccessful) {
                     val queryResult:SignInMethodQueryResult= task.result as SignInMethodQueryResult;
                     val have_user =
-                        queryResult?.getSignInMethods() != null && queryResult.signInMethods?.size!! >0?:0
+                        queryResult.getSignInMethods() != null && queryResult.signInMethods?.size!! >0?:0
                     Log.i("Auth","Checking email "+have_user)
                     if (have_user ) {
                     showMessage("User is found with this email",true)
+                        manageViewPager(null)
 
                     } else {
-                        email=ver_email;
+                        this.email=email;
+                        manageViewPager(true)
                     }
                 }  else {
                     Log.i("Auth","Checking email canceled ${ver_email}");
 
                 }
-                manageViewPager(true)
 
                 progressBar.cancel();
 
@@ -200,11 +232,12 @@ class SignUp:AppCompatActivity() {
             OnSuccessListener<QuerySnapshot> { queryDocumentSnapshots ->
                 if (queryDocumentSnapshots.isEmpty) {
                   userName=username;
+                    manageViewPager(true)
                 } else {
 
                     showMessage("User name is taken , try another",true)
+                    manageViewPager(null)
                 }
-                manageViewPager(true)
 
                 progressBar.cancel()
             })
@@ -255,8 +288,11 @@ class SignUp:AppCompatActivity() {
                                 TODO("Not yet implemented")
                             }
                         },this@SignUp,true);
+                            val layoutManager2 = FlexboxLayoutManager(this@SignUp)
+                            layoutManager2.flexDirection = FlexDirection.ROW
+                            layoutManager2.justifyContent = JustifyContent.SPACE_EVENLY
 
-                        page.selected_tags.layoutManager=LinearLayoutManager(this@SignUp,LinearLayoutManager.HORIZONTAL,false);
+                        page.selected_tags.layoutManager=layoutManager2;
                         page.selected_tags.adapter=selected_adapter;
                         tag_Adaptaer=TagAdapter(Tag.tags, object : Selected {
                             override fun select(objects: Tag, selected: Boolean, poistion: Int) {

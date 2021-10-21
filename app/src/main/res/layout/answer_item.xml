@@ -14,8 +14,8 @@
             android:layout_margin="4dp"
             android:src="@drawable/ic_default_picture"
             android:layout_centerVertical="true"
-            android:layout_width="30dp"
-            android:layout_height="30dp">
+            android:layout_width="50dp"
+            android:layout_height="50dp">
 
         </ImageView>
         <TextView
@@ -33,27 +33,28 @@
 
         </TextView>
 
+
         <Button
             android:gravity="start|center_vertical"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/up"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:id="@+id/down"
-            android:drawableEnd="@drawable/ic_tumb_down"
+            android:layout_toStartOf="@id/down"
+            android:id="@+id/up"
+            android:drawableEnd="@drawable/ic_tumb_up"
             android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
         </Button>
         <Button
+            android:layout_alignParentEnd="true"
             android:gravity="start|center_vertical"
             android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
             android:layout_margin="4dp"
             android:padding="4dp"
-            android:id="@+id/up"
-            android:drawableEnd="@drawable/ic_tumb_up"
+            android:id="@+id/down"
+            android:drawableEnd="@drawable/ic_tumb_down"
             android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">

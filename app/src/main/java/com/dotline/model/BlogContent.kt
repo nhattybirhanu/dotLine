@@ -17,6 +17,7 @@ class BlogContent:Serializable {
     var feedbacks=arrayListOf<LikeFeedBack>();
     var a_count: Long=0;
     var question_owner:String?=null;
+    var closed=false;
 
     var replays= arrayListOf<Replay>()
 
@@ -35,6 +36,8 @@ class BlogContent:Serializable {
                 blog.owner = data.get("owner") as String
                 blog.body = data.get("body") as String
                 blog.date = data.get("date") as Long
+                if (data.containsKey("closed"))
+                    blog.closed = data.get("closed") as Boolean;
                 if (data.containsKey("tags"))
                     blog.tags = data.get("tags") as ArrayList<String>;
                 if (data.containsKey("images"))

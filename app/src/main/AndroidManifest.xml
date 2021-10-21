@@ -2,34 +2,50 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.dotline">
-<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"></uses-permission>
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"></uses-permission>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_dot"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_dot"
         android:supportsRtl="true"
         android:name=".MyApp"
         tools:replace="android:theme"
+
         android:requestLegacyExternalStorage="true"
         android:preserveLegacyExternalStorage="true"
         android:theme="@style/Theme.MyApplication">
-        <activity android:name=".activity.QuestionDetail"></activity>
-        <activity android:name=".activity.QuestionCreator"></activity>
+        <activity android:name=".activity.QuestionDetail" android:exported="true"></activity>
+        <activity android:name=".activity.QuestionCreator" android:exported="true"></activity>
 
-        <activity android:name=".activity.account.SignUp"></activity>
-        <activity android:name=".activity.account.EmailVerification"></activity>
-        <activity android:name=".activity.account.LoginScreen"></activity>
-        <activity android:name=".activity.EditProfileActivity"></activity>
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".activity.Splash">
-            <intent-filter>
+        <activity android:name=".activity.account.SignUp" android:exported="true"></activity>
+        <activity android:name=".activity.account.EmailVerification" android:exported="true"></activity>
+        <activity android:name=".activity.account.LoginScreen" android:exported="true"></activity>
+        <activity android:name=".activity.EditProfileActivity" android:exported="true"></activity>
+        <activity android:name=".MainActivity" android:exported="true"></activity>
+        <activity android:name=".activity.Splash" android:exported="true">
+            <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
     </application>
 
 </manifest>

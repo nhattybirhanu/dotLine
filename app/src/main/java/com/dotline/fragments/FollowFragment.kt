@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dotline.Custom.DividerItem
 import com.dotline.R
 import com.dotline.adapter.ProfileAdapter
 import com.dotline.callbacks.UserProfileCallBack
@@ -15,6 +16,7 @@ import com.dotline.provider.UserProfileProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.content_list.*
+import kotlinx.android.synthetic.main.search_layout.*
 
 class FollowFragment:Fragment() {
     var follow:Boolean?=null;
@@ -43,8 +45,10 @@ class FollowFragment:Fragment() {
                 FirebaseAuth.getInstance().currentUser?.uid.equals(user_ID) ?: false,
                 false
             );
+
             recyclerview.layoutManager=LinearLayoutManager(context)
             recyclerview.adapter=adapter;
+           recyclerview.addItemDecoration(DividerItem(requireContext(),resources.getDrawable(R.drawable.list_divider)))
             if (follow!!&&usersId!=null) setFollowing(usersId!!)
             else if (!follow!!) setFollowers(user_ID!!)
         }

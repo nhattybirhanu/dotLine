@@ -49,42 +49,89 @@
 
         </ImageButton>
     </FrameLayout>
-    <LinearLayout
-
+    <androidx.core.widget.NestedScrollView
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@id/update"
         android:padding="20dp"
-        android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/image_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_margin="8dp"
-            app:helperText="Display name"
-            app:boxBackgroundColor="@color/white"
+        android:layout_height="wrap_content">
+        <LinearLayout
+
+            android:orientation="vertical"
+
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/display_name"
+            android:layout_height="match_parent">
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_margin="8dp"
+                app:helperText="Display name"
+                app:boxBackgroundColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/display_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            </EditText>
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_margin="8dp"
-            app:helperText="Unique username"
-            app:boxBackgroundColor="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/username"
+                </EditText>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_margin="8dp"
+                app:helperText="Unique username"
+                app:boxBackgroundColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            </EditText>
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
+                </EditText>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_margin="8dp"
+                app:helperText="Professional Bio"
+                app:boxBackgroundColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/bio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </EditText>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_margin="8dp"
+                app:helperText="LinkedIn url"
+                app:boxBackgroundColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:inputType="textUri"
+                    android:id="@+id/linkden"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </EditText>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_margin="8dp"
+                app:helperText="Github url"
+                app:boxBackgroundColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:inputType="textUri"
+                    android:id="@+id/github"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </EditText>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
     <Button
         android:onClick="update"
         android:id="@+id/update"

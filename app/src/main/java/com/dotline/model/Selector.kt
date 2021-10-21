@@ -4,6 +4,8 @@ class Selector {
     var id:String;
     var title:String;
     lateinit var path:String;
+    var  remote=false;
+
     constructor(id: String, title: String) {
         this.id = id
         this.title = title
@@ -13,6 +15,13 @@ class Selector {
         this.id = id
         this.title = title
         this.path = path
+    }
+
+    constructor(id: String, title: String, path: String, remote: Boolean) {
+        this.id = id
+        this.title = title
+        this.path = path
+        this.remote = remote
     }
 
 

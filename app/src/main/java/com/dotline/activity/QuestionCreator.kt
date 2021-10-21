@@ -20,11 +20,14 @@ import com.dotline.Util.QuestionCreatorUtil.Companion.compreesImages
 import com.dotline.Util.QuestionCreatorUtil.Companion.uris
 import com.dotline.adapter.ImageAdapter
 import com.dotline.adapter.TextSelectorAdapter
+import com.dotline.callbacks.MetaDataCallBack
 import com.dotline.callbacks.Selected
 import com.dotline.callbacks.UserProfileCallBack
 import com.dotline.fragments.SearchFragment
 import com.dotline.fragments.TagSelector
 import com.dotline.model.*
+import com.dotline.provider.RemoteFileProvider
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -35,6 +38,8 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import id.zelory.compressor.constraint.*
+import kotlinx.android.synthetic.main.answer_item.*
+import kotlinx.android.synthetic.main.common_blog_content.view.*
 import kotlinx.android.synthetic.main.post_editor.*
 import kotlinx.android.synthetic.main.post_editor.body
 import kotlinx.android.synthetic.main.post_editor.file_list
@@ -58,6 +63,8 @@ class QuestionCreator:AppCompatActivity() {
     var question:Boolean=true;
      var linkQuestion:String?=null;
     var questionOwner:String?=null;
+    var edit:Boolean=false;
+    var blogContent:BlogContent?=null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +73,8 @@ class QuestionCreator:AppCompatActivity() {
       question=  intent.getBooleanExtra("question",true);
         linkQuestion=  intent.getStringExtra("question_id");
         questionOwner=  intent.getStringExtra("question_owner");
+        edit=intent.getBooleanExtra("edit",false);
+        if (edit) blogContent= intent.getSerializableExtra("blog") as BlogContent?
     if (!question){
         qtitle_layout.setVisibility(View.GONE);
         toolbar.setTitle("Answer")
@@ -76,6 +85,23 @@ class QuestionCreator:AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             close()
         }
+
+    if (edit&&blogContent!=null){
+        if (question)
+            qtitle.setText(blogContent!!.title)
+            body.setText(blogContent!!.body)
+            if (blogContent!!.images.isNotEmpty()){
+                addImage(ImageModel.remotesrc(blogContent!!.images))
+            }
+
+        if (blogContent!!.files.isNotEmpty()){
+            addRemoteFile(blogContent!!.files)
+        }
+        tags=Tag.toTagList(blogContent!!.tags);
+        tagAdapter.update(Selector.tagconverter(tags))
+
+
+    }
 
     }
 
@@ -91,12 +117,7 @@ class QuestionCreator:AppCompatActivity() {
                 dialog, which ->
             dialog.dismiss()
         })
-        dialog.setNeutralButton("Save and cancle", DialogInterface.OnClickListener(){
-                dialog, which ->
-            dialog.dismiss()
-            finish()
 
-        })
         dialog.show()
     }
     fun  list_adapter(){
@@ -203,6 +224,20 @@ class QuestionCreator:AppCompatActivity() {
         fileAdapter.update(files)
         file_title.setVisibility(if(fileAdapter.selector.size>0) View.VISIBLE else View.GONE)
     }
+    fun  addRemoteFile(urls:ArrayList<String>){
+        urls.forEach {
+            RemoteFileProvider.MyInstance().fileMetaData(it,object : MetaDataCallBack {
+                override fun metaResult(fileModel: FileModel?) {
+                    if(fileModel!=null)
+                        fileAdapter.add(Selector(fileModel.metaData.path,
+                            fileModel.metaData!!.name!!,fileModel.remotePath,true))
+                }
+
+            })
+
+        }
+
+    }
 
     fun openTag(view: View){
         if (tagSelector==null){
@@ -243,18 +278,16 @@ class QuestionCreator:AppCompatActivity() {
             showMessage("Tag your question at least one")
             return
         }
-        if (!question&&linkQuestion==null){
-            showMessage("Please link a question for answer ")
-            return
-        }
+
         var uris =ArrayList<Uri>();
         imageAdapter.images.forEach{
             if (it.src is Uri)
+                if (!it.remote)
                 uris.add(it.src as Uri)
         }
 
         var files=ArrayList<String>();
-        fileAdapter.selector.forEach { files.add(it.path) }
+        fileAdapter.selector.forEach { if (!it.remote)files.add(it.path) }
 
         var progess=ProgressDialog(this@QuestionCreator)
         progess.setTitle("Posting")
@@ -276,7 +309,7 @@ class QuestionCreator:AppCompatActivity() {
                     if (done){
                         Log.i("Uploading","$data")
                         progess.setMessage("Posting in wall")
-                        publish(false,question,null,data,progess,linkQuestion)
+                        publish(edit,question,blogContent?.id,data,progess,linkQuestion)
                     } else {
                         progess.cancel()
                         showMessage("Posting Failed")
@@ -345,7 +378,12 @@ class QuestionCreator:AppCompatActivity() {
             };
         } else {
             val database=FirebaseDatabase.getInstance().reference.child("Answers");
-           database.push().setValue(content).addOnSuccessListener {
+           val task: Task<Void>?;
+           if (update)
+           task=database.child(old_id!!).updateChildren(content)
+            else
+                task=database.push().setValue(content)
+           task.addOnSuccessListener {
                runOnUiThread {
                    if (!forquestion) {
                        FirebaseFirestore.getInstance().collection("Questions")
@@ -356,6 +394,7 @@ class QuestionCreator:AppCompatActivity() {
                    finish()
                }
            }
+
         }
     }
 

@@ -4,30 +4,27 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.google.android.material.appbar.AppBarLayout
-        app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/app_bar"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <androidx.appcompat.widget.Toolbar
+            app:title="@string/app_name"
+            app:titleTextColor="@color/white"
+            app:navigationIcon="@drawable/ic_close"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:menu="@menu/menu_selector"
-            app:navigationIcon="@drawable/ic_close"
-            app:title="Select Tags"
-            app:titleTextColor="@color/white">
+            android:layout_height="wrap_content">
 
         </androidx.appcompat.widget.Toolbar>
-
     </com.google.android.material.appbar.AppBarLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:padding="8dp"
-        android:id="@+id/recyclerview"
+    <WebView
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constrainedHeight="true"
         app:layout_constraintTop_toBottomOf="@id/app_bar"
+        android:id="@+id/web_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-    </androidx.recyclerview.widget.RecyclerView>
-
+    </WebView>
 </androidx.constraintlayout.widget.ConstraintLayout>

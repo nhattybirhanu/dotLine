@@ -8,12 +8,5 @@
         android:title="Save"
         >
     </item>
-    <item
-        app:showAsAction="never"
-        app:icon="@drawable/ic_save"
-        android:id="@+id/notifcation"
-        android:title="Alert"
-        >
 
-    </item>
 </menu>

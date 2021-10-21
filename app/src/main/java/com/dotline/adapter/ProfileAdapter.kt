@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.dotline.R
 import com.dotline.callbacks.UserProfileCallBack
 import com.dotline.fragments.ProfilePage
@@ -35,7 +36,7 @@ class ProfileAdapter(var profiles:ArrayList<Profile>,var activity: AppCompatActi
                     notifyItemChanged(position) }
 
             }
-
+        Glide.with(profile_image).load(profile.profile_picture).placeholder(R.drawable.ic_default_picture).circleCrop().into(profile_image);
         }
     }
 

@@ -20,7 +20,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <androidx.appcompat.widget.Toolbar
-                    app:menu="@menu/content_creator_menu"
                     android:id="@+id/toolbar"
                     app:titleTextColor="@color/white"
                     app:title="Ask"
@@ -112,6 +111,7 @@
                     </Button>
 
                     <Button
+                        android:visibility="gone"
                         android:textColor="@color/colorAccent"
                         android:text="Link"
                         android:id="@+id/add_link"
@@ -162,6 +162,7 @@
 
                     </Button>
                     <Button
+                        android:visibility="gone"
                         android:drawableEnd="@drawable/ic_code"
                         android:id="@+id/add_code"
                         android:layout_margin="8dp"
@@ -275,6 +276,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
+            android:visibility="gone"
             android:backgroundTint="@color/colorSecondaryDark"
             android:id="@+id/question_draft"
             android:drawableEnd="@drawable/ic_draft"

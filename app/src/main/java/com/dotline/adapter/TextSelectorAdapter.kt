@@ -50,6 +50,6 @@ class TextSelectorAdapter(var selector:ArrayList<Selector>): RecyclerView.Adapte
     fun addAll(newselectors: java.util.ArrayList<Selector>) {
         var oldS=selector.size;
         selector.addAll(newselectors)
-        notifyItemRangeInserted(oldS,selector.size)
+        notifyItemRangeInserted(oldS,newselectors.size)
     }
 }

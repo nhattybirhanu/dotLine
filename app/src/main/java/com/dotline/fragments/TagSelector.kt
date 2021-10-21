@@ -18,6 +18,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import kotlinx.android.synthetic.main.profile_page.*
 import kotlinx.android.synthetic.main.tag_selector.*
+import java.util.ArrayList
 
 
 class TagSelector:DialogFragment(),Toolbar.OnMenuItemClickListener {
@@ -43,6 +44,7 @@ class TagSelector:DialogFragment(),Toolbar.OnMenuItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         toolbar=view.findViewById(R.id.toolbar);
         toolbar?.setOnMenuItemClickListener(this)
+        toolbar?.setNavigationOnClickListener { dismiss() }
        if (selector!=null){
            adapter=TagAdapter(Tag.tags, selector!!, activity as AppCompatActivity,true);
            val layoutManager = FlexboxLayoutManager(context)
@@ -62,6 +64,14 @@ class TagSelector:DialogFragment(),Toolbar.OnMenuItemClickListener {
             }
         }
 return false
+    }
+
+    fun setSelected(tags: ArrayList<Tag>) {
+        for (tag in tags){
+            tag.selected=true;
+            adapter.modify(tag)
+
+        }
     }
 
 

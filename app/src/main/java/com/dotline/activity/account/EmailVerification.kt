@@ -13,17 +13,30 @@ import kotlinx.android.synthetic.main.email_verification.*
 
 class EmailVerification:AppCompatActivity() {
     var user:FirebaseUser?=null;
+    lateinit var auth:FirebaseAuth;
     override fun onStart() {
-        user= FirebaseAuth.getInstance().currentUser;
+        auth=FirebaseAuth.getInstance();
+        user= auth.currentUser;
         super.onStart()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.email_verification);
         if (user!=null){
-            message.setText("We sent email verification to ${user?.email}")
 
+            message.setText("We sent email verification to ${user?.email}")
+            auth.addAuthStateListener {
+                user=it.currentUser;
+                if (user!=null){
+                    if (user!!.isEmailVerified)
+                        startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+
+                }
+
+            }
         }
+
 
 
     }
@@ -41,7 +54,7 @@ class EmailVerification:AppCompatActivity() {
             if (task.isSuccessful){
                 message("Email verification sent Successful")
             } else
-                message("Sorry sending email verification is failed, try again "+task.exception
+                message("Sorry sending email verification is failed, try again "
                 )
 
 

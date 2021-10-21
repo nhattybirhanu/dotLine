@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/profile_image"
         android:src="@drawable/ic_person"
-        app:layout_constraintWidth_percent="0.1"
+        app:layout_constraintWidth_percent="0.15"
         app:layout_constraintDimensionRatio="H,1:1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
